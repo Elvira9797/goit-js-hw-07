@@ -37,9 +37,24 @@ function getUrlFromOriginPhoto(event) {
 }
 
 function openModalWindow(imgUrl) {
-  const instance = basicLightbox.create(`
+  const instance = basicLightbox.create(
+    `
     <img src="${imgUrl}" width="800" height="600">
-`);
-  //   instance.show();
-  instance.show(() => console.log("lightbox now visible"));
+`,
+    {
+      onShow: (instance) => {
+        window.addEventListener("keydown", onEscKeyPress);
+      },
+      onClose: (instance) => {
+        window.removeEventListener("keydown", onEscKeyPress);
+      },
+    }
+  );
+  instance.show();
+
+  function onEscKeyPress(event) {
+    if (event.code === "Escape") {
+      instance.close();
+    }
+  }
 }
